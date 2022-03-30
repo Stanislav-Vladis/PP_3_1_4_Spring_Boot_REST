@@ -30,6 +30,36 @@ public class UserController {
     }
 
 
+
+
+
+
+
+
+    @GetMapping("/test")
+    public String test() {
+
+        return "test";
+
+    }
+    @GetMapping("/test2")
+    public String test2() {
+
+        return "test2";
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     @GetMapping("/user")
     public String authUser(ModelMap model) {
 
@@ -39,7 +69,7 @@ public class UserController {
         model.addAttribute("authenticationUser", userService.findUserByUsername(authentication.getName()));
         model.addAttribute("checkAdminRole", false);
 
-        return "show";
+        return "rests-how";
 
     }
 
@@ -64,7 +94,7 @@ public class UserController {
         model.addAttribute("listUsers", users);
         model.addAttribute("listRoles", roles);
 
-        return "show";
+        return "rests-how";
 
     }
 

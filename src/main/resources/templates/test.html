@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <!-- jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+  <!-- Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <title>Spring Boot Security Bootstrap</title>
+</head>
+
+<body class="bg-light" style="display: flex;
+                              flex-direction: column;
+                              height:100vh;
+                              margin: 0;
+                              padding: 0;
+                              overflow: scroll;
+                              overflow-x: hidden;">
+
+<!--------------------------- ТЕЛО ВСЕГО HTML ----------------------------->
+<div class="container-fluid d-flex flex-column" style="flex: 1;">
+
+  <!------------------------- ТЕЛО ШАПКИ СТРАНИЦЫ --------------------------->
+  <div class="row">
+
+    <div class="col-md-12">
+
+      <!-------------------------- ВЕРХНЯЯ НАВИГАЦИЯ ---------------------------->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+          <!-- Информация в левой стороне -->
+          <ul id="headerAuth" class="navbar-nav mr-auto">
+            <!-- JS ВСТАВКА -->
+          </ul>
+
+          <!-- Кнопка входа/выхода в правой стороне -->
+          <form sec:authorize="isAnonymous()" class="form-inline my-2 my-lg-0" action="/login">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Login</button>
+          </form>
+
+          <form sec:authorize="isAuthenticated()" class="form-inline my-2 my-lg-0" action="/logout" method="POST">
+            <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Logout</button>
+          </form>
+
+        </div>
+      </nav>
+      <!------------------------------------------------------------------------->
+
+    </div>
+
+  </div>
+  <!------------------------------------------------------------------------->
+
+
+
+
+
+
+
+
+  <!---------------------------- ТЕЛО СТРАНИЦЫ ------------------------------>
+  <div class="row mt-5 h-100">
+
+    <div class="col-md-12 mt-0 pl-0 pr-0">
+
+      <!------------------------------ ЛЕВОЕ МЕНЮ ------------------------------->
+      <!-- https://bootstrap-4.ru/docs/4.3.1/components/navs/ -->
+      <div class="container-fluid">
+        <div class="row h-100">
+
+          <div class="col-3 bg-white pl-0 pr-0 pt-4">
+
+            <!--<div sec:authorize="isAuthenticated()" th:if="${checkAdminRole} == true" class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+              <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Admin</a>
+              <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">User</a>
+            </div>
+
+            <div sec:authorize="isAuthenticated()" th:if="${checkAdminRole} == false" class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+              <a class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="true">User</a>
+            </div>-->
+
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+              <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Admin</a>
+              <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">User</a>
+            </div>
+
+          </div>
+
+          <div class="col-9 pr-0">
+            <div class="tab-content" id="v-pills-tabContent">
+
+              <!---------------------- ТЕЛО РАЗДЕЛА ЛЕВОГО МЕНЮ №1 ---------------------->
+              <!--<div sec:authorize="isAuthenticated()" th:if="${checkAdminRole} == true" class="tab-pane fade show active pl-2 pr-4" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">-->
+              <div  class="tab-pane fade show active pl-2 pr-4" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+
+                <!-------------------- КОНТЕНТ РАЗДЕЛА ЛЕВОГО МЕНЮ №1 --------------------->
+                <div class="card bg-light border-0">
+                  <span class="d-block p-3"><h1>Admin panel</h1></span>
+
+                  <!-- Горизонтальное меню -->
+                  <ul class="nav nav-tabs" id="myTab">
+                    <li class="nav-item">
+                      <a class="nav-link active" data-toggle="tab" href="#description">Users table</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" data-toggle="tab" href="#add-new-user">New User</a>
+                    </li>
+                  </ul>
+
+                  <!-- Контент горизонтального меню №1 -->
+                  <div class="tab-content bg-white border">
+
+                    <!-- Раздел горизонтального меню №1-1 -->
+                    <div class="tab-pane fade show active m-3" id="description">
+
+                      <div class="row">
+                        <div class="col-md-12">
+
+                          <span class="d-block p-2 bg-light border-bottom" style="margin: -15px -15px 20px;"><h4 class="m-2">All users</h4></span>
+
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-md-12" style="overflow: auto; overflow-y: hidden;">
+
+                          <!---------------------------- ТАБЛИЦА С USERS ---------------------------->
+                          <!-- https://bootstrap-4.ru/docs/4.3.1/content/tables/ -->
+                          <table class="table table-striped bg-white">
+
+                            <thead>
+                            <tr>
+                              <th scope="col">ID</th>
+                              <th scope="col">First Name</th>
+                              <th scope="col">Last Name</th>
+                              <th scope="col">Age</th>
+                              <th scope="col">Email</th>
+                              <th scope="col">Login</th>
+                              <th scope="col">Role</th>
+                              <th scope="col">Edit</th>
+                              <th scope="col">Delete</th>
+                            </tr>
+                            </thead>
+
+                            <tbody id="allUsers">
+                              <!-- JS ВСТАВКА -->
+                            </tbody>
+
+                          </table>
+                          <!------------------------------------------------------------------------->
+
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <!-- Раздел горизонтального меню №1-2 -->
+                    <div class="tab-pane fade m-3" id="add-new-user">
+
+                      <div class="row">
+                        <div class="col-md-12">
+
+                          <span class="d-block p-2 bg-light border-bottom" style="margin: -15px -15px 20px;"><h4 class="m-2">Add new user</h4></span>
+
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-md-12">
+
+                          <!------------------------- ФОРМА ДОБАВЛЕНИЯ USER ------------------------->
+                          <div class="container-fluid d-flex h-100 justify-content-center align-items-center p-0">
+                            <div class="row bg-white" style="width: 500px;">
+                              <div class="col rounded p-0">
+
+                                <form id="saveUser" method="POST" modelAttribute="userAttribute">
+
+                                  <div class="form-group">
+                                    <p class="m-0 text-center"><b>First name</b></p>
+                                    <input type="text" class="form-control" id="inputFirstName" required="required" placeholder="First name" name="name"/>
+                                  </div>
+
+                                  <div class="form-group">
+                                    <p class="m-0 text-center"><b>Last name</b></p>
+                                    <input type="text" class="form-control" id="inputLastName" required="required" placeholder="Last name" name="lastName"/>
+                                  </div>
+
+                                  <div class="form-group">
+                                    <p class="m-0 text-center"><b>Age</b></p>
+                                    <input type="number" class="form-control" id="inputAge" required="required" placeholder="Age" name="age"/>
+                                  </div>
+
+                                  <div class="form-group">
+                                    <p class="m-0 text-center"><b>Email</b></p>
+                                    <input type="email" class="form-control" id="inputEmail" required="required" placeholder="Email" name="email"/>
+                                  </div>
+
+                                  <div class="form-group">
+                                    <p class="m-0 text-center"><b>Password</b></p>
+                                    <input type="password" class="form-control" id="inputPassword" required="required" placeholder="Password" name="password"/>
+                                  </div>
+
+                                  <div class="form-group">
+                                    <p class="m-0 text-center"><b>Role</b></p>
+                                    <select multiple class="form-control" id="inputRole" required="required" size="2" name="roles">
+                                      <!-- JS ВСТАВКА -->
+                                    </select>
+                                  </div>
+
+                                  <div class="text-center">
+                                    <button type="submit" class="btn btn-success btn-lg">Add new user</button>
+                                  </div>
+
+                                </form>
+
+                              </div>
+                            </div>
+                          </div>
+                          <!------------------------------------------------------------------------->
+
+                        </div>
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </div>
+                <!------------------------------------------------------------------------->
+
+              </div>
+              <!------------------------------------------------------------------------->
+
+              <!---------------------- ТЕЛО РАЗДЕЛА ЛЕВОГО МЕНЮ №2 ---------------------->
+              <!--<div sec:authorize="isAuthenticated()" th:class="${checkAdminRole} == false ? 'tab-pane fade show active pl-2 pr-4' : 'tab-pane fade pl-2 pr-4'" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">-->
+                <div class="tab-pane fade pl-2 pr-4" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+
+                <!-------------------- КОНТЕНТ РАЗДЕЛА ЛЕВОГО МЕНЮ №2 --------------------->
+                <div class="card bg-light border-0">
+                  <span class="d-block p-3"><h1>User information-page</h1></span>
+
+                  <!-- Контент горизонтального меню №2 -->
+                  <div class="tab-content bg-white border">
+
+                    <!-- Раздел горизонтального меню №2-1 -->
+                    <div class="m-3" id="home-2">
+
+                      <div class="row">
+                        <div class="col-md-12">
+
+                          <span class="d-block p-2 bg-light border-bottom" style="margin: -15px -15px 20px;"><h4 class="m-2">About user</h4></span>
+
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-md-12" style="overflow: auto; overflow-y: hidden;">
+
+                          <!---------------------------- ТАБЛИЦА С USERS ---------------------------->
+                          <!-- https://bootstrap-4.ru/docs/4.3.1/content/tables/ -->
+                          <table class="table table-striped bg-white">
+
+                            <thead>
+                            <tr>
+                              <th scope="col">ID</th>
+                              <th scope="col">First Name</th>
+                              <th scope="col">Last Name</th>
+                              <th scope="col">Age</th>
+                              <th scope="col">Email</th>
+                              <th scope="col">Login</th>
+                              <th scope="col">Role</th>
+                            </tr>
+                            </thead>
+
+                            <tbody id="authUser">
+                              <!-- JS ВСТАВКА -->
+                            </tbody>
+
+                          </table>
+                          <!------------------------------------------------------------------------->
+
+                        </div>
+                      </div>
+                      <!------------------------------------------------------------------------->
+
+                    </div>
+
+                  </div>
+
+                </div>
+                <!------------------------------------------------------------------------->
+
+              </div>
+              <!------------------------------------------------------------------------->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <!------------------------------------------------------------------------->
+
+    </div>
+
+  </div>
+  <!------------------------------------------------------------------------->
+
+</div>
+<!------------------------------------------------------------------------->
+
+
+
+
+
+
+
+
+<!-------------------------------- FOOTER --------------------------------->
+<div class="row flex-fill d-flex h-100 justify-content-start">
+  <div class="col-3 bg-white" style="left: 7px;">
+  </div>
+  <div class="col-9">
+  </div>
+</div>
+<!------------------------------------------------------------------------->
+
+
+
+
+
+
+
+
+<!---------------------------- МОДАЛЬНЫЕ ОКНА ----------------------------->
+<!-- Окно редактирования -->
+<div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Заголовок модального окна -->
+      <div class="modal-header">
+        <h5 class="modal-title">Edit user</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+
+      <!-- Тело модального окна -->
+      <div class="modal-body">
+
+        <!------------------------- ФОРМА ИЗМЕНЕНИЯ USER ------------------------->
+        <div class="container-fluid d-flex h-100 justify-content-center align-items-center pl-5 pr-5">
+          <div class="row bg-white" style="width: 500px;">
+            <div class="col rounded pl-5 pr-5">
+
+              <form id="editUser" method="PATCH" modelAttribute="userAttribute">
+
+                <div class="form-group">
+                  <p class="m-0 text-center"><b>ID</b></p>
+                  <!-- Если поле имеет disabled, то его не может прочитать FormData() -->
+                  <input type="hidden" id="editHiddenId" name="id" readonly>
+                  <input type="number" class="form-control" id="editId" placeholder="ID" disabled="disabled" readonly>
+                </div>
+
+                <div class="form-group">
+                  <p class="m-0 text-center"><b>First name</b></p>
+                  <input type="text" class="form-control" id="editFirstName" required="required" placeholder="First name" name="name"/>
+                </div>
+
+                <div class="form-group">
+                  <p class="m-0 text-center"><b>Last name</b></p>
+                  <input type="text" class="form-control" id="editLastName" required="required" placeholder="Last name" name="lastName"/>
+                </div>
+
+                <div class="form-group">
+                  <p class="m-0 text-center"><b>Age</b></p>
+                  <input type="number" class="form-control" id="editAge" required="required" placeholder="Age" name="age"/>
+                </div>
+
+                <div class="form-group">
+                  <p class="m-0 text-center"><b>Email</b></p>
+                  <input type="email" class="form-control" id="editEmail" required="required" placeholder="Email" name="email"/>
+                </div>
+
+                <div class="form-group">
+                  <input type="hidden" class="form-control" id="editLogin" required="required" placeholder="Login" name="login"/>
+                </div>
+
+                <div class="form-group">
+                  <p class="m-0 text-center"><b>Password</b></p>
+                  <input type="password" class="form-control" id="editPassword" required="required" placeholder="Password" name="password"/>
+                </div>
+
+                <div class="form-group" id="editRole">
+                  <!-- JS ВСТАВКА -->
+                </div>
+
+              </form>
+
+            </div>
+          </div>
+        </div>
+        <!------------------------------------------------------------------------->
+
+      </div>
+
+      <!-- Подвал модального окна -->
+      <div class="modal-footer">
+        <button type="button" id="buttonCloseEditUser" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" id="buttonEditUser" class="btn btn-primary">Edit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+<!-- Окно удаления -->
+<div class="modal fade" id="modal-delete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Заголовок модального окна -->
+      <div class="modal-header">
+        <h5 class="modal-title">Delete user</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+
+      <!-- Тело модального окна -->
+      <div class="modal-body">
+
+        <!------------------------- ФОРМА УДАЛЕНИЯ USER --------------------------->
+        <div class="container-fluid d-flex h-100 justify-content-center align-items-center pl-5 pr-5">
+          <div class="row bg-white" style="width: 500px;">
+            <div class="col rounded pl-5 pr-5">
+
+              <form id="deleteUser" action="" method="DELETE" modelAttribute="userAttribute">
+
+                <div class="form-group">
+                  <p class="m-0 text-center"><b>ID</b></p>
+                  <!-- Если поле имеет disabled, то его не может прочитать FormData() -->
+                  <input type="hidden" id="deleteHiddenId" name="id" readonly>
+                  <input type="number" class="form-control" id="deleteId" placeholder="ID" disabled="disabled" readonly>
+                </div>
+
+                <div class="form-group">
+                  <p class="m-0 text-center"><b>First name</b></p>
+                  <input type="text" class="form-control" id="deleteFirstName" required="required" placeholder="First name" name="name" disabled="disabled" readonly/>
+                </div>
+
+                <div class="form-group">
+                  <p class="m-0 text-center"><b>Last name</b></p>
+                  <input type="text" class="form-control" id="deleteLastName" required="required" placeholder="Last name" name="lastName" disabled="disabled" readonly/>
+                </div>
+
+                <div class="form-group">
+                  <p class="m-0 text-center"><b>Age</b></p>
+                  <input type="number" class="form-control" id="deleteAge" required="required" placeholder="Age" name="age" disabled="disabled" readonly/>
+                </div>
+
+                <div class="form-group">
+                  <p class="m-0 text-center"><b>Email</b></p>
+                  <input type="email" class="form-control" id="deleteEmail" required="required" placeholder="Email" name="email" disabled="disabled" readonly/>
+                </div>
+
+                <div class="form-group" id="deleteRole">
+                  <!-- JS ВСТАВКА -->
+                </div>
+
+              </form>
+
+            </div>
+          </div>
+        </div>
+        <!------------------------------------------------------------------------->
+
+      </div>
+
+      <!-- Подвал модального окна -->
+      <div class="modal-footer">
+        <button type="button" id="buttonCloseDeleteUser" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" id="buttonDeleteUser" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!------------------------------------------------------------------------->
+
+
+
+
+
+
+
+
+<!------------------------------ JS SCRIPT -------------------------------->
+<script>
+
+  //----------------------------- РАБОТА С HTML -----------------------------
+  //Генерируем Header
+  function showHeader(json) {
+
+    let staticHTML1 = `<li class="nav-item active">\n` +
+                      `    <span class="text-white"><h5>&ensp;with roles:&ensp;</h5></span>\n` +
+                      `</li>\n`;
+    let HTML = '';
+    let arrSpan = ['email', [staticHTML1], 'roles'];
+
+
+    //Каждый элемент - это объект User
+    for (let i in json) {
+
+      //Получаем из объекта User нужные поля
+      for (let j in arrSpan) {
+        let valueUser = json[i][arrSpan[j]];
+        if (arrSpan[j] === 'roles') {
+          //===========================================================
+          //Начало списка ролей
+          HTML = HTML + `<li class="nav-item active">\n` +
+                        `     <span class="text-white">\n` +
+                        `          <h5>\n` +
+                        `              <table>\n` +
+                        `                  <tr>\n`;
+          for(let r in valueUser) {
+            HTML = HTML + '                    <a>' + valueUser[r]['role'] + '</a>&nbsp;\n';
+          }
+          //Конец списка ролей
+          HTML = HTML + `                   </tr>\n` +
+                        `               </table>\n` +
+                        `          </h5>\n` +
+                        `     </spane>\n` +
+                        `</li>\n`;
+          //===========================================================
+        } else if (Array.isArray(arrSpan[j])) {
+          //===========================================================
+          //Статическая вставка
+          HTML = HTML + '\n' + arrSpan[j][0] + '\n';
+          //===========================================================
+        } else {
+          //===========================================================
+          HTML = HTML + `\n<li class="nav-item active">\n` +
+                        `    <span class="text-white"><h5><b>` + valueUser + `</b></h5></span>\n` +
+                        `</li>\n`;
+          //===========================================================
+        }
+        //console.log(valueUser);
+      }
+
+    }
+    //console.log(HTML);
+    $('#headerAuth').html(HTML);
+
+  }
+
+
+
+  //Вывод на страницу User
+  function showUsers(json, type) {
+
+    let staticHTML1 = `<div class="form-group">\n` +
+                      `    <td><button type="button" class="btn btn-info modalButtonEditUser" data-toggle="modal" data-target="#modal-edit">Edit</button></td>\n` +
+                      `</div>\n\n` +
+                      `<div class="form-group">\n` +
+                      `    <td><button type="button" class="btn btn-danger modalButtonDeleteUser" data-toggle="modal" data-target="#modal-delete">Delete</button></td>\n` +
+                      `</div>`;
+    let HTML = '';
+    let arrTds = ['id', 'name', 'lastName', 'age', 'email', 'username', 'roles', [staticHTML1]];
+
+
+    //Каждый элемент - это объект User
+    for (let i in json) {
+
+      //Начало строки table
+      HTML = HTML + `<tr>\n`;
+      //Получаем из объекта User нужные поля
+      for (let j in arrTds) {
+        let valueUser = json[i][arrTds[j]];
+        if (arrTds[j] === 'roles') {
+          //===========================================================
+          //Начало списка ролей
+          HTML = HTML + `\n<div class="form-group">\n` +
+                        `    <td style="vertical-align: middle">\n`;
+          for(let r in valueUser) {
+            HTML = HTML + `      <a>` + valueUser[r]['role'] + `</a>&nbsp;\n`;
+          }
+          //Конец списка ролей
+          HTML = HTML +  `    </td>\n` +
+                        `</div>\n`;
+          //===========================================================
+        } else if (Array.isArray(arrTds[j])) {
+          //===========================================================
+          //Статическая вставка
+          if (type === 'all') {
+            HTML = HTML + '\n' + arrTds[j][0] + '\n';
+          }
+          //===========================================================
+        } else {
+          //===========================================================
+          HTML = HTML + `\n<div class="form-group">\n` +
+                        `    <td style="vertical-align: middle">\n` +
+                        `    ` + valueUser + `\n` +
+                        `    </td>\n` +
+                        `</div>\n`;
+          //===========================================================
+        }
+        //console.log(valueUser);
+      }
+      //Конец строки table
+      HTML = HTML + `\n</tr>\n\n`;
+
+    }
+    //console.log(HTML);
+    if (type === 'all') {
+      $('#allUsers').html(HTML);
+      modalWindows();
+    }
+    if (type === 'auth') {
+      $('#authUser').html(HTML);
+    }
+
+  }
+
+
+
+
+  //Вывод на страницу Role в форме добавления и редактирования User
+  async function showFormRoles() {
+
+    let jsonRoles = await allRoles();
+    let HTML = '';
+
+
+    for(let r in jsonRoles) {
+      HTML = HTML + `            <option value="` + (Number(r) + 1) + `">` + jsonRoles[r]['role'] + `</option>\n`;
+    }
+    //console.log(HTML);
+    $('#inputRole').html(HTML);
+    $('#editRole').html('<p class="m-0 text-center"><b>Role</b></p>\n' +
+                        '<select multiple class="form-control" required="required" size="2" name="roles">'
+                         + HTML +
+                        '</select>');
+
+  }
+  showFormRoles();
+
+
+
+
+  //Функцию необходимо запустить ПОСЛЕ вывода всех User в HTML
+  //Получение значений таблицы для редактирования и удаления
+  function modalWindows() {
+
+    function getTds(tds, operation) {
+      let values = [];
+
+      for (let i = 0; i < 7; i++) {
+        if (i >= 6) {
+          values[i] = ($(tds[i]).text())
+                  .replace(/\s{1,}/g, '')
+                  .replace(/\r?\n/g, '')
+                  .replace(/ROLE/ig, '|ROLE')
+                  .replace('|', '')
+                  .split('|');
+          break;
+        } else {
+          values[i] = $(tds[i]).text().trim();
+        }
+      }
+
+      let RoleHTML = '';
+      for (let i = 0; i < values[6].length; i++) {
+        RoleHTML = RoleHTML + '<option value="' + (i + 1) + '">' + values[6][i] + '</option>';
+      }
+
+
+      $('#' + operation + 'HiddenId').val(values[0]);
+      $('#' + operation + 'Id').val(values[0]);
+      $('#' + operation + 'FirstName').val(values[1]);
+      $('#' + operation + 'LastName').val(values[2]);
+      $('#' + operation + 'Age').val(values[3]);
+      $('#' + operation + 'Email').val(values[4]);
+      if (operation === 'delete') {
+        $('#' + operation + 'Role').html('<p class="m-0 text-center"><b>Role</b></p>\n' +
+                '<select multiple class="form-control" required="required" size="2" name="roles" disabled="disabled" readonly>'
+                + RoleHTML +
+                '</select>');
+      }
+
+      //alert(values);
+
+      return values;
+
+    }
+
+    //Редактируем User
+    $('.modalButtonEditUser').click(function() {
+      getTds($(this).parent('td').siblings('td'), 'edit');
+    });
+
+    //Удаляем User
+    $('.modalButtonDeleteUser').click(function() {
+      getTds($(this).parent('td').siblings('td'), 'delete');
+    });
+
+    //Отправка формы редактирования User
+    $('#buttonEditUser').click(function() {
+      $('#editUser').submit();
+      $('#buttonCloseEditUser').click();
+    });
+
+    //Отправка формы удаления User
+    $('#buttonDeleteUser').click(function() {
+      $('#deleteUser').submit();
+      $('#buttonCloseDeleteUser').click();
+    });
+
+  }
+  //-------------------------------------------------------------------------
+
+
+
+
+  //---------------------------- ПОЛУЧЕНИЕ Role -----------------------------
+  async function allRoles() {
+
+    //Отправляем форму
+    let response = await fetch('/api/roles');
+
+    //Проверка на отсутствие ошибок
+    if (response.ok) {
+      //Получаем ответ в JSON формате
+      let json = await response.json();
+      return json;
+    } else {
+      console.log('Ошибка HTTP: ' + response.status);
+      return '';
+    }
+
+  }
+  //-------------------------------------------------------------------------
+
+
+
+
+  //---------------------------- ПОЛУЧЕНИЕ User -----------------------------
+  //Запуск fetch должен быть в ассинхронной функции
+  //https://stackoverflow.com/questions/49432579/await-is-only-valid-in-async-function
+  //https://learn.javascript.ru/fetch
+  //https://webformyself.com/perebor-obekta-json-pri-pomoshhi-cikla-for-in/
+
+  //Получаем авторизованного User
+  async function authUser() {
+
+    //Отправляем форму
+    let response = await fetch('/api/auth');
+
+    //Проверка на отсутствие ошибок
+    if (response.ok) {
+      //Получаем ответ в JSON формате
+      let json = await response.json();
+      showHeader([json]);
+      showUsers([json], 'auth');
+    } else {
+      console.log('Ошибка HTTP: ' + response.status);
+    }
+
+  }
+  authUser();
+
+
+
+  //Получаем всех User
+  async function allUsers() {
+
+    //Отправляем форму
+    let response = await fetch('/api/users');
+
+    if (response.ok) {
+      let json = await response.json();
+      showUsers(json, 'all');
+    } else {
+      console.log('Ошибка HTTP: ' + response.status);
+    }
+
+  }
+  allUsers();
+  //-------------------------------------------------------------------------
+
+
+
+
+  //----------------------------- ОТПРАВКА ФОРМ -----------------------------
+  //Сохранение нового User
+  async function saveNewUser() {
+
+    //FormData будет использоваться только те поля ввода, которые используют атрибут name
+    //https://learn.javascript.ru/fetch
+    //https://itchief.ru/javascript/formdata
+    //https://developer.mozilla.org/ru/docs/Web/API/FormData/Using_FormData_Objects
+    //https://basicweb.ru/javascript/js_event_preventdefault.php#:~:text=JavaScript%20%D0%BC%D0%B5%D1%82%D0%BE%D0%B4%20preventDefault()%20%D0%BE%D0%B1%D1%8A%D0%B5%D0%BA%D1%82%D0%B0,%D1%87%D1%82%D0%BE%20%D1%81%D0%BE%D0%B1%D1%8B%D1%82%D0%B8%D0%B5%20%D0%BD%D0%B8%D1%87%D0%B5%D0%B3%D0%BE%20%D0%BD%D0%B5%20%D0%B4%D0%B5%D0%BB%D0%B0%D0%B5%D1%82.
+    //https://itchief.ru/javascript/jquery-introduction#:~:text=%D0%9F%D0%BE%D0%B4%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B5%20jQuery%20%D0%BA%20%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B5%20%D0%BE%D1%81%D1%83%D1%89%D0%B5%D1%81%D1%82%D0%B2%D0%BB%D1%8F%D0%B5%D1%82%D1%81%D1%8F,%D0%B8%D0%BB%D0%B8%20%D0%BE%D1%82%D0%BD%D0%BE%D1%81%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9%20%D0%BF%D1%83%D1%82%D1%8C%20%D0%BA%20%D1%84%D0%B0%D0%B9%D0%BB%D1%83.
+    //https://snipp.ru/jquery/ajax-jquery
+    //https://professorweb.ru/my/javascript/jquery/level3/3_5.php
+    saveUser.onsubmit = async (e) => {
+      //Отменяем способ отправки формы по умолчанию
+      e.preventDefault();
+
+      //let formData = new FormData(saveUser);
+      //console.log(formData.getAll("'roles'));
+
+
+      //Отправляем форму
+      let response = await fetch('/api/users', {
+        method: 'POST',
+        body: new FormData(saveUser)
+      });
+
+      if (response.ok) {
+        $('#inputFirstName').val('');
+        $('#inputLastName').val('');
+        $('#inputAge').val('');
+        $('#inputEmail').val('');
+        $('#inputPassword').val('');
+        $('#inputRole').val(0);
+        let json = await response.json();
+        await allUsers();
+        console.log(json);
+      } else {
+        console.log('Ошибка HTTP: ' + response.status);
+      }
+
+    };
+
+  }
+  saveNewUser();
+
+
+
+
+  //Редактирование User
+  async function updateUser() {
+
+    editUser.onsubmit = async (e) => {
+      e.preventDefault();
+
+
+      //Отправляем форму
+      let response = await fetch('/api/users', {
+        method: 'PATCH',
+        body: new FormData(editUser)
+      });
+
+      if (response.ok) {
+        $('#editFirstName').val('');
+        $('#editLastName').val('');
+        $('#editAge').val('');
+        $('#editEmail').val('');
+        $('#editPassword').val('');
+        $('#editRole').val(0);
+        let json = await response.json();
+        await allUsers();
+        console.log(json);
+      } else {
+        console.log('Ошибка HTTP: ' + response.status);
+      }
+
+    };
+
+  }
+  updateUser();
+
+
+
+
+  //Удаление User
+  async function removeUser() {
+
+    deleteUser.onsubmit = async (e) => {
+      e.preventDefault();
+
+      let formData = new FormData(deleteUser);
+
+
+      //Отправляем форму
+      let response = await fetch('/api/users/' + formData.get('id'), {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        $('#deleteFirstName').val('');
+        $('#deleteLastName').val('');
+        $('#deleteAge').val('');
+        $('#deleteEmail').val('');
+        $('#deletePassword').val('');
+        $('#deleteRole').val(0);
+        let text = await response.text();
+        await allUsers();
+        console.log(text);
+      } else {
+        console.log('Ошибка HTTP: ' + response.status);
+      }
+
+    };
+
+  }
+  removeUser();
+  //-------------------------------------------------------------------------
+
+</script>
+<!------------------------------------------------------------------------->
+
+</body>
+
+</html>

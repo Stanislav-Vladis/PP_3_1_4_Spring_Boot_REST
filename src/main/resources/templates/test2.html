@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+<body>
+
+
+<br><br><br><br>
+<form id="editUser" method="PATCH" modelAttribute="userAttribute">
+
+    <input type="number" name="id" value="9">
+    <input type="text" name="name" value="John">
+    <input type="text" name="lastName" value="Smith">
+    <input type="number" name="age" value="33">
+    <input type="email" name="email" value="smith@yandex.ru66">
+    <input type="text" name="username" value="user_4140319">
+    <input type="text" name="password" value="password">
+    <select multiple required="required" size="2" name="roles">
+        <option selected value="1">ROLE_USER</option>
+        <option value="2">ROLE_ADMIN</option>
+    </select>
+    <input type="submit">
+
+</form>
+
+<script>
+    //Редактирование User
+    async function updateUser() {
+
+        editUser.onsubmit = async (e) => {
+            e.preventDefault();
+
+            console.log(new FormData(editUser));
+
+            $.ajax({
+                url: '/api/users',
+                data: new FormData(editUser),
+                processData: false,
+                contentType: false,
+                type: 'PATCH',
+                success: function (data) {
+                    console.log(data);
+                }
+            });
+
+
+
+
+
+            /*//Отправляем форму
+            let response = await fetch('/api/users', {
+              method: 'PATCH',
+              body: new FormData(editUser)
+            });
+
+            if (response.ok) {
+              let json = await response.json();
+              console.log(json);
+            } else {
+              console.log('Ошибка HTTP: ' + response.status);
+            }*/
+
+        };
+
+    }
+    updateUser();
+</script>
+
+</body>
+</html>
