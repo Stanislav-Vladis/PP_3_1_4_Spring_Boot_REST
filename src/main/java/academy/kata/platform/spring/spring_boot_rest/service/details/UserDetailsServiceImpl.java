@@ -21,10 +21,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
 
 
-    /*Для того, чтобы авторизироваться с использованием Spring Security и UserDetailsService,
-    * нужно реализовать интерфейс UserDetailsService.
-    * UserDetailsService - нужен, чтобы создать UserDetails, когда передано имя пользователя в виде String.
-    * */
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) {
@@ -34,13 +30,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException(username);
         }
 
-        /*GrantedAuthority - отражает разрешения выданные доверителю в масштабе всего приложения
-        * Получаем все роли, которые есть у юзера с переданным username и записываем их в grantedAuthorities
-        * */
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         user.getRoles().stream().forEach(role -> grantedAuthorities.add(new SimpleGrantedAuthority(role.getRole())));
 
-        //Возвращаем UserDetails (Spring Security) с логином, паролем и списоком ролей
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), grantedAuthorities);
 
     }

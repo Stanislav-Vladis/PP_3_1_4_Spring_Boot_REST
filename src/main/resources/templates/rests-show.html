@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <!-- jQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
   <!-- Bootstrap JS -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <title>Spring Boot Security Bootstrap</title>
@@ -67,7 +66,7 @@
 
 
   <!---------------------------- ТЕЛО СТРАНИЦЫ ------------------------------>
-  <div class="row mt-5 h-100">
+  <div sec:authorize="isAuthenticated()" class="row mt-5 h-100">
 
     <div class="col-md-12 mt-0 pl-0 pr-0">
 
@@ -78,18 +77,13 @@
 
           <div class="col-3 bg-white pl-0 pr-0 pt-4">
 
-            <!--<div sec:authorize="isAuthenticated()" th:if="${checkAdminRole} == true" class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <div sec:authorize="hasAuthority('ROLE_ADMIN')" class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
               <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Admin</a>
               <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">User</a>
             </div>
 
-            <div sec:authorize="isAuthenticated()" th:if="${checkAdminRole} == false" class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <div sec:authorize="hasAuthority('ROLE_ADMIN') != true && hasAuthority('ROLE_USER') == true" class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
               <a class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="true">User</a>
-            </div>-->
-
-            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-              <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Admin</a>
-              <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">User</a>
             </div>
 
           </div>
@@ -98,8 +92,7 @@
             <div class="tab-content" id="v-pills-tabContent">
 
               <!---------------------- ТЕЛО РАЗДЕЛА ЛЕВОГО МЕНЮ №1 ---------------------->
-              <!--<div sec:authorize="isAuthenticated()" th:if="${checkAdminRole} == true" class="tab-pane fade show active pl-2 pr-4" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">-->
-              <div  class="tab-pane fade show active pl-2 pr-4" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+              <div sec:authorize="hasAuthority('ROLE_ADMIN')" class="tab-pane fade show active pl-2 pr-4" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
 
                 <!-------------------- КОНТЕНТ РАЗДЕЛА ЛЕВОГО МЕНЮ №1 --------------------->
                 <div class="card bg-light border-0">
@@ -240,8 +233,12 @@
               <!------------------------------------------------------------------------->
 
               <!---------------------- ТЕЛО РАЗДЕЛА ЛЕВОГО МЕНЮ №2 ---------------------->
-              <!--<div sec:authorize="isAuthenticated()" th:class="${checkAdminRole} == false ? 'tab-pane fade show active pl-2 pr-4' : 'tab-pane fade pl-2 pr-4'" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">-->
+              <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
                 <div class="tab-pane fade pl-2 pr-4" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+              </th:block>
+              <th:block sec:authorize="hasAuthority('ROLE_ADMIN') != true && hasAuthority('ROLE_USER') == true">
+                <div class="tab-pane fade show active pl-2 pr-4" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+              </th:block>
 
                 <!-------------------- КОНТЕНТ РАЗДЕЛА ЛЕВОГО МЕНЮ №2 --------------------->
                 <div class="card bg-light border-0">
@@ -340,6 +337,7 @@
 
 
 <!---------------------------- МОДАЛЬНЫЕ ОКНА ----------------------------->
+<th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
 <!-- Окно редактирования -->
 <div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -399,8 +397,11 @@
                   <input type="password" class="form-control" id="editPassword" required="required" placeholder="Password" name="password"/>
                 </div>
 
-                <div class="form-group" id="editRole">
-                  <!-- JS ВСТАВКА -->
+                <div class="form-group">
+                  <p class="m-0 text-center"><b>Role</b></p>
+                  <select multiple class="form-control" id="editRole" required="required" size="2" name="roles">
+                    <!-- JS ВСТАВКА -->
+                  </select>
                 </div>
 
               </form>
@@ -478,8 +479,11 @@
                   <input type="email" class="form-control" id="deleteEmail" required="required" placeholder="Email" name="email" disabled="disabled" readonly/>
                 </div>
 
-                <div class="form-group" id="deleteRole">
-                  <!-- JS ВСТАВКА -->
+                <div class="form-group">
+                  <p class="m-0 text-center"><b>Role</b></p>
+                  <select multiple class="form-control" id="deleteRole" required="required" size="2" name="roles"  disabled="disabled" readonly>
+                    <!-- JS ВСТАВКА -->
+                  </select>
                 </div>
 
               </form>
@@ -499,6 +503,7 @@
     </div>
   </div>
 </div>
+</th:block>
 <!------------------------------------------------------------------------->
 
 
@@ -509,260 +514,14 @@
 
 
 <!------------------------------ JS SCRIPT -------------------------------->
+
+  <!------------------------ ПОЛУЧЕНИЕ ДАННЫХ ИЗ БД ------------------------->
+  <!--Запуск fetch должен быть в ассинхронной функции
+  https://stackoverflow.com/questions/49432579/await-is-only-valid-in-async-function
+  https://learn.javascript.ru/fetch
+  https://webformyself.com/perebor-obekta-json-pri-pomoshhi-cikla-for-in/-->
+
 <script>
-
-  //----------------------------- РАБОТА С HTML -----------------------------
-  //Генерируем Header
-  function showHeader(json) {
-
-    let staticHTML1 = `<li class="nav-item active">\n` +
-                      `    <span class="text-white"><h5>&ensp;with roles:&ensp;</h5></span>\n` +
-                      `</li>\n`;
-    let HTML = '';
-    let arrSpan = ['email', [staticHTML1], 'roles'];
-
-
-    //Каждый элемент - это объект User
-    for (let i in json) {
-
-      //Получаем из объекта User нужные поля
-      for (let j in arrSpan) {
-        let valueUser = json[i][arrSpan[j]];
-        if (arrSpan[j] === 'roles') {
-          //===========================================================
-          //Начало списка ролей
-          HTML = HTML + `<li class="nav-item active">\n` +
-                        `     <span class="text-white">\n` +
-                        `          <h5>\n` +
-                        `              <table>\n` +
-                        `                  <tr>\n`;
-          for(let r in valueUser) {
-            HTML = HTML + '                    <a>' + valueUser[r]['role'] + '</a>&nbsp;\n';
-          }
-          //Конец списка ролей
-          HTML = HTML + `                   </tr>\n` +
-                        `               </table>\n` +
-                        `          </h5>\n` +
-                        `     </spane>\n` +
-                        `</li>\n`;
-          //===========================================================
-        } else if (Array.isArray(arrSpan[j])) {
-          //===========================================================
-          //Статическая вставка
-          HTML = HTML + '\n' + arrSpan[j][0] + '\n';
-          //===========================================================
-        } else {
-          //===========================================================
-          HTML = HTML + `\n<li class="nav-item active">\n` +
-                        `    <span class="text-white"><h5><b>` + valueUser + `</b></h5></span>\n` +
-                        `</li>\n`;
-          //===========================================================
-        }
-        //console.log(valueUser);
-      }
-
-    }
-    //console.log(HTML);
-    $('#headerAuth').html(HTML);
-
-  }
-
-
-
-  //Вывод на страницу User
-  function showUsers(json, type) {
-
-    let staticHTML1 = `<div class="form-group">\n` +
-                      `    <td><button type="button" class="btn btn-info modalButtonEditUser" data-toggle="modal" data-target="#modal-edit">Edit</button></td>\n` +
-                      `</div>\n\n` +
-                      `<div class="form-group">\n` +
-                      `    <td><button type="button" class="btn btn-danger modalButtonDeleteUser" data-toggle="modal" data-target="#modal-delete">Delete</button></td>\n` +
-                      `</div>`;
-    let HTML = '';
-    let arrTds = ['id', 'name', 'lastName', 'age', 'email', 'username', 'roles', [staticHTML1]];
-
-
-    //Каждый элемент - это объект User
-    for (let i in json) {
-
-      //Начало строки table
-      HTML = HTML + `<tr>\n`;
-      //Получаем из объекта User нужные поля
-      for (let j in arrTds) {
-        let valueUser = json[i][arrTds[j]];
-        if (arrTds[j] === 'roles') {
-          //===========================================================
-          //Начало списка ролей
-          HTML = HTML + `\n<div class="form-group">\n` +
-                        `    <td style="vertical-align: middle">\n`;
-          for(let r in valueUser) {
-            HTML = HTML + `      <a>` + valueUser[r]['role'] + `</a>&nbsp;\n`;
-          }
-          //Конец списка ролей
-          HTML = HTML +  `    </td>\n` +
-                        `</div>\n`;
-          //===========================================================
-        } else if (Array.isArray(arrTds[j])) {
-          //===========================================================
-          //Статическая вставка
-          if (type === 'all') {
-            HTML = HTML + '\n' + arrTds[j][0] + '\n';
-          }
-          //===========================================================
-        } else {
-          //===========================================================
-          HTML = HTML + `\n<div class="form-group">\n` +
-                        `    <td style="vertical-align: middle">\n` +
-                        `    ` + valueUser + `\n` +
-                        `    </td>\n` +
-                        `</div>\n`;
-          //===========================================================
-        }
-        //console.log(valueUser);
-      }
-      //Конец строки table
-      HTML = HTML + `\n</tr>\n\n`;
-
-    }
-    //console.log(HTML);
-    if (type === 'all') {
-      $('#allUsers').html(HTML);
-      modalWindows();
-    }
-    if (type === 'auth') {
-      $('#authUser').html(HTML);
-    }
-
-  }
-
-
-
-
-  //Вывод на страницу Role в форме добавления и редактирования User
-  async function showFormRoles() {
-
-    let jsonRoles = await allRoles();
-    let HTML = '';
-
-
-    for(let r in jsonRoles) {
-      HTML = HTML + `            <option value="` + (Number(r) + 1) + `">` + jsonRoles[r]['role'] + `</option>\n`;
-    }
-    //console.log(HTML);
-    $('#inputRole').html(HTML);
-    $('#editRole').html('<p class="m-0 text-center"><b>Role</b></p>\n' +
-                        '<select multiple class="form-control" required="required" size="2" name="roles">'
-                         + HTML +
-                        '</select>');
-
-  }
-  showFormRoles();
-
-
-
-
-  //Функцию необходимо запустить ПОСЛЕ вывода всех User в HTML
-  //Получение значений таблицы для редактирования и удаления
-  function modalWindows() {
-
-    function getTds(tds, operation) {
-      let values = [];
-
-      for (let i = 0; i < 7; i++) {
-        if (i >= 6) {
-          values[i] = ($(tds[i]).text())
-                  .replace(/\s{1,}/g, '')
-                  .replace(/\r?\n/g, '')
-                  .replace(/ROLE/ig, '|ROLE')
-                  .replace('|', '')
-                  .split('|');
-          break;
-        } else {
-          values[i] = $(tds[i]).text().trim();
-        }
-      }
-
-      let RoleHTML = '';
-      for (let i = 0; i < values[6].length; i++) {
-        RoleHTML = RoleHTML + '<option value="' + (i + 1) + '">' + values[6][i] + '</option>';
-      }
-
-
-      $('#' + operation + 'HiddenId').val(values[0]);
-      $('#' + operation + 'Id').val(values[0]);
-      $('#' + operation + 'FirstName').val(values[1]);
-      $('#' + operation + 'LastName').val(values[2]);
-      $('#' + operation + 'Age').val(values[3]);
-      $('#' + operation + 'Email').val(values[4]);
-      if (operation === 'delete') {
-        $('#' + operation + 'Role').html('<p class="m-0 text-center"><b>Role</b></p>\n' +
-                '<select multiple class="form-control" required="required" size="2" name="roles" disabled="disabled" readonly>'
-                + RoleHTML +
-                '</select>');
-      }
-
-      //alert(values);
-
-      return values;
-
-    }
-
-    //Редактируем User
-    $('.modalButtonEditUser').click(function() {
-      getTds($(this).parent('td').siblings('td'), 'edit');
-    });
-
-    //Удаляем User
-    $('.modalButtonDeleteUser').click(function() {
-      getTds($(this).parent('td').siblings('td'), 'delete');
-    });
-
-    //Отправка формы редактирования User
-    $('#buttonEditUser').click(function() {
-      $('#editUser').submit();
-      $('#buttonCloseEditUser').click();
-    });
-
-    //Отправка формы удаления User
-    $('#buttonDeleteUser').click(function() {
-      $('#deleteUser').submit();
-      $('#buttonCloseDeleteUser').click();
-    });
-
-  }
-  //-------------------------------------------------------------------------
-
-
-
-
-  //---------------------------- ПОЛУЧЕНИЕ Role -----------------------------
-  async function allRoles() {
-
-    //Отправляем форму
-    let response = await fetch('/api/roles');
-
-    //Проверка на отсутствие ошибок
-    if (response.ok) {
-      //Получаем ответ в JSON формате
-      let json = await response.json();
-      return json;
-    } else {
-      console.log('Ошибка HTTP: ' + response.status);
-      return '';
-    }
-
-  }
-  //-------------------------------------------------------------------------
-
-
-
-
-  //---------------------------- ПОЛУЧЕНИЕ User -----------------------------
-  //Запуск fetch должен быть в ассинхронной функции
-  //https://stackoverflow.com/questions/49432579/await-is-only-valid-in-async-function
-  //https://learn.javascript.ru/fetch
-  //https://webformyself.com/perebor-obekta-json-pri-pomoshhi-cikla-for-in/
-
   //Получаем авторизованного User
   async function authUser() {
 
@@ -781,9 +540,12 @@
 
   }
   authUser();
+</script>
 
 
 
+
+<script sec:authorize="hasAuthority('ROLE_ADMIN')">
   //Получаем всех User
   async function allUsers() {
 
@@ -799,12 +561,34 @@
 
   }
   allUsers();
-  //-------------------------------------------------------------------------
+
+
+
+  //Получаем все Role
+  async function allRoles() {
+
+    //Отправляем форму
+    let response = await fetch('/api/roles');
+
+    //Проверка на отсутствие ошибок
+    if (response.ok) {
+      //Получаем ответ в JSON формате
+      let json = await response.json();
+      return json;
+    } else {
+      console.log('Ошибка HTTP: ' + response.status);
+      return '';
+    }
+
+  }
+</script>
+  <!------------------------------------------------------------------------->
 
 
 
 
-  //----------------------------- ОТПРАВКА ФОРМ -----------------------------
+  <!----------------------------- ОТПРАВКА ФОРМ ----------------------------->
+<script sec:authorize="hasAuthority('ROLE_ADMIN')">
   //Сохранение нового User
   async function saveNewUser() {
 
@@ -919,9 +703,237 @@
 
   }
   removeUser();
-  //-------------------------------------------------------------------------
-
 </script>
+  <!------------------------------------------------------------------------->
+
+
+
+
+  <!----------------------------- РАБОТА С HTML ----------------------------->
+<script>
+  //Вывод на страницу Header
+  function showHeader(json) {
+
+    let staticHTML1 = `<li class="nav-item active">\n` +
+                      `    <span class="text-white"><h5>&ensp;with roles:&ensp;</h5></span>\n` +
+                      `</li>\n`;
+    let HTML = '';
+    let arrSpan = ['email', [staticHTML1], 'roles'];
+
+
+    //Каждый элемент - это объект User
+    for (let i in json) {
+
+      //Получаем из объекта User нужные поля
+      for (let j in arrSpan) {
+        let valueUser = json[i][arrSpan[j]];
+        if (arrSpan[j] === 'roles') {
+          //===========================================================
+          //Начало списка ролей
+          HTML = HTML + `<li class="nav-item active">\n` +
+                        `     <span class="text-white">\n` +
+                        `          <h5>\n` +
+                        `              <table>\n` +
+                        `                  <tr>\n`;
+          for(let r in valueUser) {
+            HTML = HTML + '                    <a>' + valueUser[r]['role'] + '</a>&nbsp;\n';
+          }
+          //Конец списка ролей
+          HTML = HTML + `                   </tr>\n` +
+                        `               </table>\n` +
+                        `          </h5>\n` +
+                        `     </spane>\n` +
+                        `</li>\n`;
+          //===========================================================
+        } else if (Array.isArray(arrSpan[j])) {
+          //===========================================================
+          //Статическая вставка
+          HTML = HTML + '\n' + arrSpan[j][0] + '\n';
+          //===========================================================
+        } else {
+          //===========================================================
+          HTML = HTML + `\n<li class="nav-item active">\n` +
+                        `    <span class="text-white"><h5><b>` + valueUser + `</b></h5></span>\n` +
+                        `</li>\n`;
+          //===========================================================
+        }
+        //console.log(valueUser);
+      }
+
+    }
+    //console.log(HTML);
+    $('#headerAuth').html(HTML);
+
+  }
+
+
+
+  //Вывод на страницу User
+  function showUsers(json, type) {
+
+    let staticHTML1 = `<div class="form-group">\n` +
+                      `    <td><button type="button" class="btn btn-info modalButtonEditUser" data-toggle="modal" data-target="#modal-edit">Edit</button></td>\n` +
+                      `</div>\n\n` +
+                      `<div class="form-group">\n` +
+                      `    <td><button type="button" class="btn btn-danger modalButtonDeleteUser" data-toggle="modal" data-target="#modal-delete">Delete</button></td>\n` +
+                      `</div>`;
+    let HTML = '';
+    let arrTds = [];
+    if (type === 'all') {
+      arrTds = ['id', 'name', 'lastName', 'age', 'email', 'username', 'roles', [staticHTML1]];
+    }
+    if (type === 'auth') {
+      arrTds = ['id', 'name', 'lastName', 'age', 'email', 'username', 'roles'];
+    }
+
+
+    //Каждый элемент - это объект User
+    for (let i in json) {
+
+      //Начало строки table
+      HTML = HTML + `<tr>\n`;
+      //Получаем из объекта User нужные поля
+      for (let j in arrTds) {
+        let valueUser = json[i][arrTds[j]];
+        if (arrTds[j] === 'roles') {
+          //===========================================================
+          //Начало списка ролей
+          HTML = HTML + `\n<div class="form-group">\n` +
+                        `    <td style="vertical-align: middle">\n`;
+          for(let r in valueUser) {
+            HTML = HTML + `      <a>` + valueUser[r]['role'] + `</a>&nbsp;\n`;
+          }
+          //Конец списка ролей
+          HTML = HTML +  `    </td>\n` +
+                        `</div>\n`;
+          //===========================================================
+        } else if (Array.isArray(arrTds[j])) {
+          //===========================================================
+          //Статическая вставка
+          HTML = HTML + '\n' + arrTds[j][0] + '\n';
+          //===========================================================
+        } else {
+          //===========================================================
+          HTML = HTML + `\n<div class="form-group">\n` +
+                        `    <td style="vertical-align: middle">\n` +
+                        `    ` + valueUser + `\n` +
+                        `    </td>\n` +
+                        `</div>\n`;
+          //===========================================================
+        }
+        //console.log(valueUser);
+      }
+      //Конец строки table
+      HTML = HTML + `\n</tr>\n\n`;
+
+    }
+    //console.log(HTML);
+    if (type === 'all') {
+      $('#allUsers').html(HTML);
+      modalWindows();
+    }
+    if (type === 'auth') {
+      $('#authUser').html(HTML);
+    }
+
+  }
+</script>
+
+
+
+
+<script sec:authorize="hasAuthority('ROLE_ADMIN')">
+  //Вывод на страницу Role в форме
+  async function showFormRoles(operation, roles) {
+
+    let jsonRoles = operation === null || roles === null ? await allRoles() : roles;
+    let HTML = '';
+
+    for(let r in jsonRoles) {
+      HTML = HTML + `            <option value="` + (Number(r) + 1) + `">` + jsonRoles[r]['role'] + `</option>\n`;
+    }
+    //console.log(HTML);
+    if (operation != null && roles != null) {
+      $('#' + operation + 'Role').html(HTML);
+    } else {
+      $('#inputRole').html(HTML);
+      $('#editRole').html(HTML);
+    }
+
+  }
+  showFormRoles(null, null);
+
+
+
+
+  //Функцию необходимо запустить ПОСЛЕ вывода всех User в HTML
+  //Получение значений таблицы для редактирования и удаления
+  function modalWindows() {
+
+    function getTds(tds, operation) {
+      let values = [];
+
+      for (let i = 0; i < 7; i++) {
+        if (i >= 6) {
+          values[i] = ($(tds[i]).text())
+                  .replace(/\s{1,}/g, '')
+                  .replace(/\r?\n/g, '')
+                  .replace(/ROLE/ig, '|ROLE')
+                  .replace('|', '')
+                  .split('|');
+          //Создаем объект
+          values[i] = values[i].reduce(function(target, key, index) {
+            target[index] = {"role": key};
+            return target;
+          }, []);
+          //console.log(values[i]);
+          break;
+        } else {
+          values[i] = $(tds[i]).text().trim();
+        }
+      }
+
+
+      $('#' + operation + 'HiddenId').val(values[0]);
+      $('#' + operation + 'Id').val(values[0]);
+      $('#' + operation + 'FirstName').val(values[1]);
+      $('#' + operation + 'LastName').val(values[2]);
+      $('#' + operation + 'Age').val(values[3]);
+      $('#' + operation + 'Email').val(values[4]);
+      if (operation === 'delete') {
+        showFormRoles(operation, values[6]);
+      }
+
+      return values;
+
+    }
+
+    //Редактируем User
+    $('.modalButtonEditUser').click(function() {
+      getTds($(this).parent('td').siblings('td'), 'edit');
+    });
+
+    //Удаляем User
+    $('.modalButtonDeleteUser').click(function() {
+      getTds($(this).parent('td').siblings('td'), 'delete');
+    });
+
+    //Отправка формы редактирования User
+    $('#buttonEditUser').click(function() {
+      $('#editUser').submit();
+      $('#buttonCloseEditUser').click();
+    });
+
+    //Отправка формы удаления User
+    $('#buttonDeleteUser').click(function() {
+      $('#deleteUser').submit();
+      $('#buttonCloseDeleteUser').click();
+    });
+
+  }
+</script>
+  <!------------------------------------------------------------------------->
+
 <!------------------------------------------------------------------------->
 
 </body>

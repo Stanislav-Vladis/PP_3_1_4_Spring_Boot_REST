@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.List;
 
-//@RestController - это Controller оторый управляет REST запросами и ответами.
+//@RestController - это Controller который управляет REST запросами и ответами.
 @org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api")
 public class RestController {
