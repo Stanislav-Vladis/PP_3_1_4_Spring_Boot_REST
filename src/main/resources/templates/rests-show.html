@@ -736,7 +736,7 @@
                         `              <table>\n` +
                         `                  <tr>\n`;
           for(let r in valueUser) {
-            HTML = HTML + '                    <a>' + valueUser[r]['role'] + '</a>&nbsp;\n';
+            HTML = HTML + '                    <a>' + valueUser[r]['role'].replace('ROLE_', '') + '</a>&nbsp;\n';
           }
           //Конец списка ролей
           HTML = HTML + `                   </tr>\n` +
